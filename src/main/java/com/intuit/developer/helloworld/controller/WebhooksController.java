@@ -14,6 +14,12 @@ public class WebhooksController {
     private static final String ERROR = "Error";
     @Autowired
     OAuth2PlatformClientFactory factory;
+    @RequestMapping(value = "/webhooks", method = RequestMethod.GET)
+    @ResponseBody
+    public String webhooks(Model model) {
+        model.addAttribute("response", "webhooks");
+        return "connected";
+    }
     @RequestMapping(value = "/webhooks", method = RequestMethod.POST)
     @ResponseBody
     public String webhooks(@RequestHeader(SIGNATURE) String signature, @RequestBody String payload, Model model) {
