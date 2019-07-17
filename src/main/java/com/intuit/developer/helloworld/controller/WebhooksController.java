@@ -38,7 +38,6 @@ public class WebhooksController {
         return "connected";
     }
     @PostMapping("/webhooks")
-    //@ResponseBody
     public void webhooks(@RequestHeader(SIGNATURE) String signature, @RequestBody String payload, Model model) {
        /* HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
