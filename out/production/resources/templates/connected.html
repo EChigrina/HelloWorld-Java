@@ -5,7 +5,6 @@
   <link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{css/style.css}"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script>
-
     if(window.opener) {
       window.opener.location.href = '/connected'
       window.close()
@@ -23,25 +22,32 @@
           $("#result").html(data)
         })
     }
-    function newCustomer() {
 
-        $.get("/customerForm", function(data) {
+    function newCustomer() {
+        window.location.href = '/customerForm';
+    }
+
+    function pdf() {
+        $("#result").html('Loading...')
+        $.get("/invoice", function(data) {
           $("#result").html(data)
         })
     }
   </script>
 </head>
 <body>
-<a href="/" class="pure-menu-link">Home</a>
+<a href="/">Home</a>
 <h3>Connected!</h3>
+
 <div>
   <button onclick="refreshToken()">Refresh Token</button>
   <br /><br />
   <button onclick="newCustomer()">Create new customer</button>
   <button onclick="invoice()">Create new invoice</button>
-  <br />
-
-  <div><code id="result" th:text="${response}"></code></div>
+  <br /><br />
+  <!--<button onclick="pdf()">Add pdf</button>-->
+  <br /><br />
+  <div><code id="result"></code></div>
 </div>
 </body>
 </html>

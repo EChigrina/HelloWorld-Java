@@ -1,17 +1,5 @@
 package com.intuit.developer.helloworld.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intuit.developer.helloworld.client.OAuth2PlatformClientFactory;
@@ -25,11 +13,17 @@ import com.intuit.ipp.services.QueryResult;
 import com.intuit.oauth2.client.OAuth2PlatformClient;
 import com.intuit.oauth2.data.BearerTokenResponse;
 import com.intuit.oauth2.exception.OAuthException;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
- * @author dderose
- *
- */
+import javax.servlet.http.HttpSession;
+import java.util.List;
+
 @Controller
 public class QBOController {
 	
@@ -42,14 +36,7 @@ public class QBOController {
 	
 	private static final Logger logger = Logger.getLogger(QBOController.class);
 	private static final String failureMsg="Failed";
-	
-	
-	/**
-     * Sample QBO API call using OAuth2 tokens
-     * 
-     * @param session
-     * @return
-     */
+
 	@ResponseBody
     @RequestMapping("/getCompanyInfo")
     public String callQBOCompanyInfo(HttpSession session) {

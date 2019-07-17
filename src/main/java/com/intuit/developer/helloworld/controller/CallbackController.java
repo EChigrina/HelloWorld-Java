@@ -1,22 +1,17 @@
 package com.intuit.developer.helloworld.controller;
 
-import javax.servlet.http.HttpSession;
-
+import com.intuit.developer.helloworld.client.OAuth2PlatformClientFactory;
+import com.intuit.oauth2.client.OAuth2PlatformClient;
+import com.intuit.oauth2.data.BearerTokenResponse;
+import com.intuit.oauth2.exception.OAuthException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.intuit.developer.helloworld.client.OAuth2PlatformClientFactory;
-import com.intuit.oauth2.client.OAuth2PlatformClient;
-import com.intuit.oauth2.data.BearerTokenResponse;
-import com.intuit.oauth2.exception.OAuthException;
+import javax.servlet.http.HttpSession;
 
-/**
- * @author dderose
- *
- */
 @Controller
 public class CallbackController {
     
@@ -24,19 +19,7 @@ public class CallbackController {
 	OAuth2PlatformClientFactory factory;
 
     private static final Logger logger = Logger.getLogger(CallbackController.class);
-    
-    /**
-     *  This is the redirect handler you configure in your app on developer.intuit.com
-     *  The Authorization code has a short lifetime.
-     *  Hence Unless a user action is quick and mandatory, proceed to exchange the Authorization Code for
-     *  BearerToken
-     *      
-     * @param auth_code
-     * @param state
-     * @param realmId
-     * @param session
-     * @return
-     */
+
     @RequestMapping("/oauth2redirect")
     public String callBackFromOAuth(@RequestParam("code") String authCode, @RequestParam("state") String state, @RequestParam(value = "realmId", required = false) String realmId, HttpSession session) {   
         logger.info("inside oauth2redirect of sample"  );
@@ -54,8 +37,6 @@ public class CallbackController {
 				 
 	            session.setAttribute("access_token", bearerTokenResponse.getAccessToken());
 	            session.setAttribute("refresh_token", bearerTokenResponse.getRefreshToken());
-	    
-	            // Update your Data store here with user's AccessToken and RefreshToken along with the realmId
 
 	            return "connected";
 	        }
@@ -65,6 +46,4 @@ public class CallbackController {
 		} 
         return null;
     }
-
-
 }

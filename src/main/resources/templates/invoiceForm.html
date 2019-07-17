@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{css/style.css}"/>
+        <title>New Invoice</title>
+    </head>
+    <body>
+        <h4>Create new invoice</h4>
+        <form action="#" th:action="@{/invoice}" th:object="${invoice}" method="post">
+            <p>Customer:
+                <select th:field="${invoice.customerId}" >
+                    <option th:each="customer : ${customers}" th:value="${customer.id}" th:text="${customer.DisplayName}"></option>
+                </select>
+            </p>
+            <p>Item:
+                <select  th:field="${invoice.itemId}">
+                    <option th:each="item : ${items}" th:value="${item.id}" th:text="${item.Name}"></option>
+                </select>
+            </p>
+            <p>Account:
+                <select  th:field="${invoice.accountId}" >
+                    <option th:each="account : ${accounts}" th:value="${account.Id}" th:text="${account.Name}"></option>
+                </select>
+            </p>
+            <p>Amount: <input type="text" th:field="*{amount}" class="pure-input-rounded"></p>
+            <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+        </form>
+    </body>
+</html>

@@ -1,26 +1,22 @@
 package com.intuit.developer.helloworld.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.view.RedirectView;
-
 import com.intuit.developer.helloworld.client.OAuth2PlatformClientFactory;
 import com.intuit.oauth2.config.OAuth2Config;
 import com.intuit.oauth2.config.Scope;
 import com.intuit.oauth2.exception.InvalidRequestException;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.view.RedirectView;
 
-/**
- * @author dderose
- *
- */
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 public class HomeController {
 	
@@ -35,14 +31,11 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/connected")
-	public String connected() {
+	public String connected(@ModelAttribute("response") String response, Model model) {
+		model.addAttribute("response", response);
 		return "connected";
 	}
-	
-	/**
-	 * Controller mapping for connectToQuickbooks button
-	 * @return
-	 */
+
 	@RequestMapping("/connectToQuickbooks")
 	public View connectToQuickbooks(HttpSession session) {
 		logger.info("inside connectToQuickbooks ");
@@ -53,7 +46,7 @@ public class HomeController {
 		String csrf = oauth2Config.generateCSRFToken();
 		session.setAttribute("csrfToken", csrf);
 		try {
-			List<Scope> scopes = new ArrayList<Scope>();
+			List<Scope> scopes = new ArrayList<>();
 			scopes.add(Scope.Accounting);
 			return new RedirectView(oauth2Config.prepareUrl(scopes, redirectUri, csrf), true, true, false);
 		} catch (InvalidRequestException e) {
