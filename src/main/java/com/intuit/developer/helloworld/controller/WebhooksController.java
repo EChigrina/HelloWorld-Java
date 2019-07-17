@@ -3,25 +3,31 @@ package com.intuit.developer.helloworld.controller;
 import com.intuit.developer.helloworld.client.OAuth2PlatformClientFactory;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
+@Controller
 public class WebhooksController {
     private static final Logger logger = Logger.getLogger(WebhooksController.class);
     private static final String SIGNATURE = "intuit-signature";
     private static final String SUCCESS = "Success";
     private static final String ERROR = "Error";
+
     @Autowired
     OAuth2PlatformClientFactory factory;
-    @RequestMapping(value = "/webhooks", method = RequestMethod.GET)
-    @ResponseBody
+
+    @GetMapping("/webhooks")
     public String webhooks(Model model) {
         model.addAttribute("response", "webhooks");
         return "connected";
     }
-    @RequestMapping(value = "/webhooks", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping("/webhooks")
+    //@ResponseBody
     public String webhooks(@RequestHeader(SIGNATURE) String signature, @RequestBody String payload, Model model) {
 
         // if signature is empty return 401
