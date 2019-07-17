@@ -2,8 +2,6 @@ body {
   font-family: "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif;
 }
 
-
-
 .imgLink {
   text-decoration: none;
   display: inline-block;
@@ -12,4 +10,9 @@ body {
 
 #result {
   white-space: pre-wrap;
+  margin-left: 10px;
+
+}
+form {
+    margin-left: 10px;
 }

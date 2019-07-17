@@ -3,13 +3,19 @@ package com.intuit.developer.helloworld.controller;
 import com.intuit.developer.helloworld.client.OAuth2PlatformClientFactory;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.client.RestTemplate;
 
 @Controller
 public class WebhooksController {
@@ -28,30 +34,17 @@ public class WebhooksController {
     }
     @PostMapping("/webhooks")
     //@ResponseBody
-    public String webhooks(@RequestHeader(SIGNATURE) String signature, @RequestBody String payload, Model model) {
+    public void webhooks(@RequestHeader(SIGNATURE) String signature, @RequestBody String payload, Model model) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // if signature is empty return 401
-        if (!StringUtils.hasText(signature)) {
-            model.addAttribute("response", "empty signature");
-            return "connected";
-        }
+        MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+        map.add("payload", payload);
 
-        // if payload is empty, don't do anything
-        if (!StringUtils.hasText(payload)) {
-            model.addAttribute("response", "empty payload");
-            return "connected";
-        }
-        model.addAttribute("response", payload);
-        return "connected";
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
-        //if request valid - push to queue
-       /* if (securityService.isRequestValid(signature, payload)) {
-            queueService.add(payload);
-        } else {
-            return new ResponseEntity<>(new ResponseWrapper(ERROR), HttpStatus.FORBIDDEN);
-        }
-
-        LOG.info("response sent ");
-        return new ResponseEntity<>(new ResponseWrapper(SUCCESS), HttpStatus.OK);*/
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.postForEntity( "https://dxfeed-quickbooksintegration.cs17.force.com/services/apexrest/SalesforceQuickbooksIntegration", request , String.class );
+        //logger.info(response);
     }
 }
