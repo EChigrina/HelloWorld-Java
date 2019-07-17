@@ -3,6 +3,7 @@ package com.intuit.developer.helloworld.controller;
 import com.intuit.developer.helloworld.client.OAuth2PlatformClientFactory;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,19 +16,21 @@ public class WebhooksController {
     OAuth2PlatformClientFactory factory;
     @RequestMapping(value = "/webhooks", method = RequestMethod.POST)
     @ResponseBody
-    public void webhooks(@RequestHeader(SIGNATURE) String signature, @RequestBody String payload) {
+    public String webhooks(@RequestHeader(SIGNATURE) String signature, @RequestBody String payload, Model model) {
 
         // if signature is empty return 401
         if (!StringUtils.hasText(signature)) {
-            logger.info("empty signature");
+            model.addAttribute("response", "empty signature");
+            return "connected";
         }
 
         // if payload is empty, don't do anything
         if (!StringUtils.hasText(payload)) {
-            logger.info("empty payload");
+            model.addAttribute("response", "empty payload");
+            return "connected";
         }
-
-        logger.info("request recieved ");
+        model.addAttribute("response", payload);
+        return "connected";
 
         //if request valid - push to queue
        /* if (securityService.isRequestValid(signature, payload)) {
