@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,24 +84,38 @@ public class InvoiceController {
                 return "connected";
             }
             qboInvoice.setCustomerRef(createRef(customers.get(0)));
+            //fill in email
+            EmailAddress em = customers.get(0).getPrimaryEmailAddr();
+            qboInvoice.setBillEmail(em);
+            //fill sales term
+            qboInvoice.setSalesTermRef(customers.get(0).getSalesTermRef());
 
-            List<Line> invLine = new ArrayList<>();
-            Line line = new Line();
-            line.setAmount(new BigDecimal(invoice.getAmount()));
-            line.setDetailType(LineDetailTypeEnum.SALES_ITEM_LINE_DETAIL);
+            List<TaxCode> taxCodes = QBOServiceHelper.executeQuery(service, String.format("select * from TaxCode where Id='%s' maxresults 1", customers.get(0).getDefaultTaxCodeRef().getValue()));
+            if (taxCodes.isEmpty()) {
+                model.addAttribute("response", "Error accessing the taxCode!");
+                return "connected";
+            }
+            TxnTaxDetail txnTaxDetail = new TxnTaxDetail();
+            ReferenceType referenceType = new ReferenceType();
+            referenceType.setValue(taxCodes.get(0).getId());
+            referenceType.setName(taxCodes.get(0).getName());
+            //txnTaxDetail.setDefaultTaxCodeRef(referenceType);
+            txnTaxDetail.setTxnTaxCodeRef(referenceType);
+            qboInvoice.setTxnTaxDetail(txnTaxDetail);
 
-            List<Item> items = QBOServiceHelper.executeQuery(service, String.format("select * from Item where Id='%s' maxresults 1", invoice.getItemId()));
+            System.out.println("MELLO " + qboInvoice.getTxnTaxDetail().getTxnTaxCodeRef().getValue());
+            TransactionDeliveryInfo transactionDeliveryInfo = new TransactionDeliveryInfo();
+            if(customers.get(0).getPreferredDeliveryMethod().equals("Email")) {
+                transactionDeliveryInfo.setDeliveryType(DeliveryTypeEnum.EMAIL);
+                qboInvoice.setDeliveryInfo(transactionDeliveryInfo);
+            }
+
+            String itemIds = String.join("', '", invoice.getItemId());
+            List<Item> items = QBOServiceHelper.executeQuery(service, String.format("select * from Item where Id in ('%s')", itemIds));
             if (items.isEmpty()) {
                 model.addAttribute("response", "Error accessing the chosen item!");
                 return "connected";
             }
-            Item item = items.get(0);
-            SalesItemLineDetail silDetails = new SalesItemLineDetail();
-            silDetails.setItemRef(createRef(item));
-
-            line.setSalesItemLineDetail(silDetails);
-            invLine.add(line);
-            qboInvoice.setLine(invLine);
 
             List<Account> accounts = QBOServiceHelper.executeQuery(service, String.format("select * from Account where Id='%s' maxresults 1", invoice.getAccountId()));
             if (items.isEmpty()) {
@@ -110,7 +123,23 @@ public class InvoiceController {
                 return "connected";
             }
             Account account = accounts.get(0);
-            item.setIncomeAccountRef(createRef(account));
+            List<Line> invLine = new ArrayList<>();
+            for(Item item : items) {
+                item.setIncomeAccountRef(createRef(account));
+                SalesItemLineDetail silDetails = new SalesItemLineDetail();
+                silDetails.setItemRef(createRef(item));
+                item.setSalesTaxCodeRef(referenceType);
+               // item.setSalesTaxIncluded(true);
+                Line line = new Line();
+                line.setAmount(item.getUnitPrice());
+                line.setDetailType(LineDetailTypeEnum.SALES_ITEM_LINE_DETAIL);
+                line.setSalesItemLineDetail(silDetails);
+                invLine.add(line);
+            }
+            qboInvoice.setGlobalTaxCalculation(GlobalTaxCalculationEnum.TAX_EXCLUDED);
+            qboInvoice.setLine(invLine);
+
+
             Invoice savedInvoice = service.add(qboInvoice);
             model.addAttribute("response", createResponse(savedInvoice));
             return "connected";

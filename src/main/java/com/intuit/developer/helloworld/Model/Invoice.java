@@ -1,9 +1,10 @@
 package com.intuit.developer.helloworld.Model;
 
+import java.util.List;
+
 public class Invoice {
     private String customerId;
-    private String itemId;
-    private String amount;
+    private List<String> itemId;
     private String accountId;
 
     public String getAccountId() {
@@ -14,14 +15,6 @@ public class Invoice {
         this.accountId = accountId;
     }
 
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
-
     public String getCustomerId() {
         return customerId;
     }
@@ -30,11 +23,11 @@ public class Invoice {
         this.customerId = customerId;
     }
 
-    public String getItemId() {
+    public List<String> getItemId() {
         return itemId;
     }
 
-    public void setItemId(String itemId) {
+    public void setItemId(List<String> itemId) {
         this.itemId = itemId;
     }
 }

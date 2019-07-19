@@ -6,16 +6,21 @@ import com.intuit.oauth2.config.Scope;
 import com.intuit.oauth2.exception.InvalidRequestException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class HomeController {
@@ -34,6 +39,26 @@ public class HomeController {
 	public String connected(@ModelAttribute("response") String response, Model model) {
 		model.addAttribute("response", response);
 		return "connected";
+	}
+
+	@RequestMapping(value="/test", method = RequestMethod.GET)
+	public ResponseEntity<String> test() {
+		final String uri = "https://dxfeed-quickbooksintegration.cs17.force.com/services/apexrest/SalesforceQuickbooksIntegration";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("payload", "3");
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<?> entity = new HttpEntity<Object>(params, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> result = restTemplate.postForEntity( uri, entity, String.class);
+
+		System.out.println(result.getStatusCode());
+
+		return new ResponseEntity<String>(result.getBody(), HttpStatus.OK);
 	}
 
 	@RequestMapping("/connectToQuickbooks")
