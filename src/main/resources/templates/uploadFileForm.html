@@ -19,13 +19,11 @@
                 <option th:each="customer : ${customers}" th:value="${customer.id}" th:text="${customer.DisplayName}"></option>
             </select>
         </p>
-<!--    <p>Select PDF file: <button onclick="uploadPdf()">Upload pdf</button></p>-->
-    <form:form method="POST" modelAttribute="sampleDetails"
-               enctype="multipart/form-data" action="/uploadFile">
-        <input type="file" name="uploadedFileName" id="fileToUpload" required="" >
-<!--        <input type="submit" name="import_file" value="Import File" id="" />-->
-    </form:form>
-    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+        <form:form method="POST" modelAttribute="sampleDetails"
+                   enctype="multipart/form-data" action="/uploadFile">
+            <input type="file" name="uploadedFileName" id="fileToUpload" required="" >
+        </form:form>
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
 
     </form>
     <div><code id="result" th:text="${response}"></code></div>
