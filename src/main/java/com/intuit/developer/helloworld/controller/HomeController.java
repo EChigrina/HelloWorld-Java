@@ -6,21 +6,16 @@ import com.intuit.oauth2.config.Scope;
 import com.intuit.oauth2.exception.InvalidRequestException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class HomeController {
@@ -41,7 +36,7 @@ public class HomeController {
 		return "connected";
 	}
 
-	@RequestMapping(value="/test", method = RequestMethod.GET)
+	/*@RequestMapping(value="/test", method = RequestMethod.GET)
 	public ResponseEntity<String> test() {
 		final String uri = "https://dxfeed-quickbooksintegration.cs17.force.com/services/apexrest/SalesforceQuickbooksIntegration";
 
@@ -59,7 +54,7 @@ public class HomeController {
 		System.out.println(result.getStatusCode());
 
 		return new ResponseEntity<String>(result.getBody(), HttpStatus.OK);
-	}
+	}*/
 
 	@RequestMapping("/connectToQuickbooks")
 	public View connectToQuickbooks(HttpSession session) {

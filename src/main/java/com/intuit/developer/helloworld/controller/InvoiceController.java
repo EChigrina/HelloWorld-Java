@@ -54,7 +54,7 @@ public class InvoiceController {
             List<Account> accounts = QBOServiceHelper.executeQuery(service, String.format("select * from Account where AccountType='%s' maxresults 1", AccountTypeEnum.INCOME.value()));
             model.addAttribute("accounts", accounts);
 
-            model.addAttribute("invoice", new com.intuit.developer.helloworld.Model.Invoice());
+            model.addAttribute("invoice", new com.intuit.developer.helloworld.model.Invoice());
 
             return "invoiceForm";
         } catch (FMSException e) {
@@ -66,7 +66,7 @@ public class InvoiceController {
     }
 
     @PostMapping("/invoice")
-    public String uploadInvoice(HttpSession session, Model model, @ModelAttribute com.intuit.developer.helloworld.Model.Invoice invoice) {
+    public String uploadInvoice(HttpSession session, Model model, @ModelAttribute com.intuit.developer.helloworld.model.Invoice invoice) {
         String realmId = (String) session.getAttribute("realmId");
         if (StringUtils.isEmpty(realmId)) {
             model.addAttribute("response", new JSONObject().put("response", "No realm ID.  QBO calls only work if the accounting scope was passed!").toString());
@@ -103,7 +103,6 @@ public class InvoiceController {
             txnTaxDetail.setTxnTaxCodeRef(referenceType);
             qboInvoice.setTxnTaxDetail(txnTaxDetail);
 
-            System.out.println("MELLO " + qboInvoice.getTxnTaxDetail().getTxnTaxCodeRef().getValue());
             TransactionDeliveryInfo transactionDeliveryInfo = new TransactionDeliveryInfo();
             if(customers.get(0).getPreferredDeliveryMethod().equals("Email")) {
                 transactionDeliveryInfo.setDeliveryType(DeliveryTypeEnum.EMAIL);

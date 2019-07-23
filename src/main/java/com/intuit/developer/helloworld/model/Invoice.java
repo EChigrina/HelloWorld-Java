@@ -1,4 +1,4 @@
-package com.intuit.developer.helloworld.Model;
+package com.intuit.developer.helloworld.model;
 
 import java.util.List;
 

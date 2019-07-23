@@ -1,9 +1,9 @@
 package com.intuit.developer.helloworld.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.intuit.developer.helloworld.Model.Customer;
 import com.intuit.developer.helloworld.client.OAuth2PlatformClientFactory;
 import com.intuit.developer.helloworld.helper.QBOServiceHelper;
+import com.intuit.developer.helloworld.model.Customer;
 import com.intuit.ipp.data.EmailAddress;
 import com.intuit.ipp.data.Error;
 import com.intuit.ipp.exception.FMSException;

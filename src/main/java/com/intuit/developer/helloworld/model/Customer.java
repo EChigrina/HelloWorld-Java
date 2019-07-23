@@ -1,4 +1,4 @@
-package com.intuit.developer.helloworld.Model;
+package com.intuit.developer.helloworld.model;
 
 public class Customer {
     private String name;

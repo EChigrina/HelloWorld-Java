@@ -4,6 +4,18 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{css/style.css}"/>
         <title>New Invoice</title>
+        <script>
+            function items() {
+                var selText = '';
+                var values = $('#lstSelect').find('option:selected').each(function () {
+                   var $this = $(this);
+                   if ($this.length) {
+                    selText += $this.text() + ' ';
+                   }
+                });
+                $("#res").html("Your choice is: " + selText);
+            }
+      </script>
     </head>
     <body>
         <h4>Create new invoice</h4>
@@ -14,16 +26,16 @@
                 </select>
             </p>
             <p>Item:
-                <select  th:field="${invoice.itemId}">
+                <select id="lstSelect" onclick="items()" th:field="${invoice.itemId}" multiple="true">
                     <option th:each="item : ${items}" th:value="${item.id}" th:text="${item.Name}"></option>
                 </select>
             </p>
+            <p id="res"></p>
             <p>Account:
                 <select  th:field="${invoice.accountId}" >
                     <option th:each="account : ${accounts}" th:value="${account.Id}" th:text="${account.Name}"></option>
                 </select>
             </p>
-            <p>Amount: <input type="text" th:field="*{amount}" class="pure-input-rounded"></p>
             <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
         </form>
     </body>
