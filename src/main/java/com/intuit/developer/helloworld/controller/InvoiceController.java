@@ -170,14 +170,10 @@ public class InvoiceController {
             jsonInString = mapper.writeValueAsString(entity);
         }
         catch (Exception e) {
-            return createErrorResponse(e);
+            logger.error("Exception while calling QBO ", e);
+            return new JSONObject().put("response","Failed").toString();
         }
         return jsonInString;
-    }
-
-    private String createErrorResponse(Exception e) {
-        logger.error("Exception while calling QBO ", e);
-        return new JSONObject().put("response","Failed").toString();
     }
 
 

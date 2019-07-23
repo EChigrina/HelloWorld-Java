@@ -16,7 +16,6 @@
           $("#result").html(data)
         })
     }
-
     function invoice() {
         $("#result").html('Loading...')
         $.get("/invoice", function(data) {
@@ -24,8 +23,13 @@
         })
     }
     function newCustomer() {
-
         $.get("/customerForm", function(data) {
+          $("#result").html(data)
+        })
+    }
+    function uploadPdf() {
+        $("#result").html('Loading...')
+        $.get("/uploadFile", function(data) {
           $("#result").html(data)
         })
     }
@@ -39,6 +43,7 @@
   <br /><br />
   <button onclick="newCustomer()">Create new customer</button>
   <button onclick="invoice()">Create new invoice</button>
+  <button onclick="uploadPdf()">Upload pdf</button>
   <br />
 
   <div><code id="result" th:text="${response}"></code></div>

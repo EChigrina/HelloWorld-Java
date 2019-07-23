@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function uploadPdf() {
+            $.get("/pdf", function(data) {
+              $("#result").html(data)
+            })
+        }
+    </script>
+</head>
+<body>
+<div>
+    <form enctype="multipart/form-data" action="#" th:action="@{/uploadFile}" th:object="${file}" method="post">
+        <p>Select customer:
+            <select th:field="${file.customerId}" >
+                <option th:each="customer : ${customers}" th:value="${customer.id}" th:text="${customer.DisplayName}"></option>
+            </select>
+        </p>
+<!--    <p>Select PDF file: <button onclick="uploadPdf()">Upload pdf</button></p>-->
+    <form:form method="POST" modelAttribute="sampleDetails"
+               enctype="multipart/form-data" action="/uploadFile">
+        <input type="file" name="uploadedFileName" id="fileToUpload" required="" >
+<!--        <input type="submit" name="import_file" value="Import File" id="" />-->
+    </form:form>
+    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+
+    </form>
+    <div><code id="result" th:text="${response}"></code></div>
+</div>
+</body>
+</html>

@@ -7,6 +7,7 @@ import com.intuit.oauth2.exception.OAuthException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,7 +22,7 @@ public class CallbackController {
     private static final Logger logger = Logger.getLogger(CallbackController.class);
 
     @RequestMapping("/oauth2redirect")
-    public String callBackFromOAuth(@RequestParam("code") String authCode, @RequestParam("state") String state, @RequestParam(value = "realmId", required = false) String realmId, HttpSession session) {   
+    public String callBackFromOAuth(Model model, @RequestParam("code") String authCode, @RequestParam("state") String state, @RequestParam(value = "realmId", required = false) String realmId, HttpSession session) {
         logger.info("inside oauth2redirect of sample"  );
         try {
 	        String csrfToken = (String) session.getAttribute("csrfToken");
@@ -38,6 +39,7 @@ public class CallbackController {
 	            session.setAttribute("access_token", bearerTokenResponse.getAccessToken());
 	            session.setAttribute("refresh_token", bearerTokenResponse.getRefreshToken());
 
+				model.addAttribute("response", "Connected!");
 	            return "connected";
 	        }
 	        logger.info("csrf token mismatch " );
