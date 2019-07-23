@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +90,7 @@ public class InvoiceController {
             qboInvoice.setBillEmail(em);
             //fill sales term
             qboInvoice.setSalesTermRef(customers.get(0).getSalesTermRef());
-
+            System.out.println("HELLO " + customers.get(0).getDefaultTaxCodeRef().getValue());
             List<TaxCode> taxCodes = QBOServiceHelper.executeQuery(service, String.format("select * from TaxCode where Id='%s' maxresults 1", customers.get(0).getDefaultTaxCodeRef().getValue()));
             if (taxCodes.isEmpty()) {
                 model.addAttribute("response", "Error accessing the taxCode!");
@@ -126,6 +127,7 @@ public class InvoiceController {
             for(Item item : items) {
                 item.setIncomeAccountRef(createRef(account));
                 SalesItemLineDetail silDetails = new SalesItemLineDetail();
+                silDetails.setQty(new BigDecimal(1));
                 silDetails.setItemRef(createRef(item));
                 item.setSalesTaxCodeRef(referenceType);
                // item.setSalesTaxIncluded(true);
@@ -150,7 +152,7 @@ public class InvoiceController {
         } catch (FMSException e) {
             List<Error> list = e.getErrorList();
             list.forEach(error -> logger.error("Error while calling the API :: " + error.getMessage()));
-            model.addAttribute("response", "Failed");
+            model.addAttribute("response", e.getMessage());
             return "connected";
         }
     }
