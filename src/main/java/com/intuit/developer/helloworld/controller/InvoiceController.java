@@ -90,7 +90,7 @@ public class InvoiceController {
             qboInvoice.setBillEmail(em);
             //fill sales term
             qboInvoice.setSalesTermRef(customers.get(0).getSalesTermRef());
-            System.out.println("HELLO " + customers.get(0).getDefaultTaxCodeRef().getValue());
+          //  System.out.println("HELLO " + customers.get(0).getDefaultTaxCodeRef().getValue());
             List<TaxCode> taxCodes = QBOServiceHelper.executeQuery(service, String.format("select * from TaxCode where Id='%s' maxresults 1", customers.get(0).getDefaultTaxCodeRef().getValue()));
             if (taxCodes.isEmpty()) {
                 model.addAttribute("response", "Error accessing the taxCode!");

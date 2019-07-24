@@ -69,9 +69,7 @@ public class FileUploadController {
         }
         String accessToken = (String) session.getAttribute("access_token");
         try {
-             DataService service = helper.getDataService(realmId, accessToken);
-           // File fileToUpload = new File("/home/codeinside/Postman/files/test first 11-07-2019 .pdf");
-          //  InputStream in = new FileInputStream(fileToUpload);
+            DataService service = helper.getDataService(realmId, accessToken);
 
             Attachable attachable = new Attachable();
             attachable.setFileName(multipart.getOriginalFilename());
